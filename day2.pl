@@ -22,15 +22,15 @@ repetition_to_multiplier(WordLength, Repetitions, Multiplier) :-
 repetition_to_multiplier(_, 1, 1).
 
 fake_in_domain(Domain, Fake, Repetitions) :-
+    Fake in Domain,
     between(1, 20, WordLength),
     repetition_to_multiplier(WordLength, Repetitions, Multiplier),
-    Fake in Domain,
-    Fake #>= 10 ^ (Repetitions * WordLength - 1),
     Word #>= 0,
     Word #< 10 ^ WordLength,
     % Do not allow leading zeroes:
+    Fake #>= 10 ^ (Repetitions * WordLength - 1),
     Fake #= Word * Multiplier,
-    labeling([bisect], [WordLength, Fake]).
+    labeling([bisect], [Word, Fake]).
 
 fake_in_domain(Domain, Fake) :-
     between(2, 20, Reps),
