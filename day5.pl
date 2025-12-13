@@ -3,6 +3,7 @@
 :- use_module(library(lists)).
 :- use_module(library(dcgs)).
 :- use_module(parsing).
+:- use_module(utils).
 
 parse_range(From-To) --> integer(From), "-", integer(To), "\n".
 
@@ -31,10 +32,6 @@ part1(X, Rs, [I | Is]) :-
         is_fresh(Rs, I) -> X is Y + 1
         ; X = Y
     ).
-
-ranges_to_domain([From-To], From..To).
-ranges_to_domain([From-To | Rs], From..To \/ Ds) :-
-    ranges_to_domain(Rs, Ds).
 
 part2(N) :-
     read_problem(Rs, _),

@@ -3,6 +3,7 @@
 :- use_module(library(dcgs)).
 :- use_module(library(lists)).
 :- use_module(parsing).
+:- use_module(utils).
 
 parse_line(left-Num) --> "L", integer(Num), "\n".
 parse_line(right-Num) --> "R", integer(Num), "\n".
@@ -39,9 +40,6 @@ part2(N) :-
     read_problem(Xs),
     run_comb2(_, Xs, S),
     sum(S, N).
-
-sum([], 0).
-sum([X | Xs], S) :- sum(Xs, S1), S is X + S1.
 
 run_comb2(50, [], []).
 run_comb2(X, [left-D | Rs], [Zero | Zs]) :-
