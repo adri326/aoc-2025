@@ -1,13 +1,15 @@
 :- use_module(library(pio)).
-:- use_module(library(clpfd)).
-:- [library(dcg/basics)].
+:- use_module(library(clpz)).
+:- use_module(library(lists)).
+:- use_module(library(dcgs)).
+:- use_module(parsing).
 
 parse_range(From-To) --> integer(From), "-", integer(To), "\n".
 
-parse_ranges([]) --> ("\n" ; eos).
+parse_ranges([]) --> ("\n" ; []).
 parse_ranges([R | Rs]) --> parse_range(R), parse_ranges(Rs).
 
-parse_ingredients([]) --> ("\n" ; eos).
+parse_ingredients([]) --> ("\n" ; []).
 parse_ingredients([I | Is]) --> integer(I), "\n", parse_ingredients(Is).
 
 parse_problem(Rs, Is) --> parse_ranges(Rs), parse_ingredients(Is).

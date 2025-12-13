@@ -1,11 +1,13 @@
 :- use_module(library(pio)).
-:- use_module(library(clpfd)).
-:- [library(dcg/basics)].
+:- use_module(library(clpz)).
+:- use_module(library(dcgs)).
+:- use_module(library(lists)).
+:- use_module(parsing).
 
 parse_line(left-Num) --> "L", integer(Num), "\n".
 parse_line(right-Num) --> "R", integer(Num), "\n".
 
-parse_problem([]) --> ("\n" ; eos).
+parse_problem([]) --> [].
 parse_problem([X | Xs]) --> parse_line(X), parse_problem(Xs).
 
 read_problem(Xs) :- phrase_from_file(parse_problem(XsRev), "./inputs/day1.txt"),
