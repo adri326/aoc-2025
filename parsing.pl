@@ -1,5 +1,6 @@
 :- module(parsing, [
-    integer/3
+    integer/3,
+    digits/3
 ]).
 :- use_module(library(dcgs)).
 :- use_module(library(lists)).
