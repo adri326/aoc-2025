@@ -2,10 +2,13 @@
 :- use_module(library(clpz)).
 :- use_module(library(dcgs)).
 :- use_module(library(lists)).
-:- use_module(library(lambda)).
+% :- use_module(library(lambda)).
 :- use_module(library(iso_ext)).
 :- use_module(parsing).
 :- use_module(utils).
+:- use_module(fast_lambda).
+
+:- use_module(library(time)).
 
 parse_line([]) --> [].
 parse_line([1 | R]) --> "@", parse_line(R).
@@ -71,7 +74,8 @@ forall_between(From, To, Pred) :-
     between_list(From, To, List),
     maplist(Pred, List).
 
-% Note: library(lambda) gets really slow when the closures get big
+% Note: library(lambda) gets really slow when the closures get big,
+% so fast_lambda is needed here for part 2 to not take hours.
 :- meta_predicate(map_xy(4, ?, ?)).
 map_xy(Pred, FromGrid, ToGrid) :-
     grid(FromGrid, Width, Height),
@@ -79,15 +83,11 @@ map_xy(Pred, FromGrid, ToGrid) :-
     W1 is Width - 1,
     between_list(0, H1, Ys),
     between_list(0, W1, Xs),
-    maplist(map_x(Pred, FromGrid, ToGrid, Xs), Ys).
-
-:- meta_predicate(map_x(4, ?, ?, ?, ?)).
-map_x(Pred, FromGrid, ToGrid, Xs, Y) :-
-    maplist(map_(Pred, FromGrid, ToGrid, Y), Xs).
-
-:- meta_predicate(map_(4, ?, ?, ?, ?)).
-map_(Pred, FromGrid, ToGrid, Y, X) :-
-    call(Pred, FromGrid, ToGrid, X, Y).
+    maplist([Pred, FromGrid, ToGrid, Xs]+\Y^(
+        maplist([Pred, FromGrid, ToGrid, Y]+\X^(
+            call(Pred, FromGrid, ToGrid, X, Y)
+        ), Xs)
+    ), Ys).
 
 write_row([]) :- write('\n').
 write_row([Cell | Rest]) :- write(Cell), write_row(Rest).
