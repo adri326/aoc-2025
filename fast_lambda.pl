@@ -46,8 +46,10 @@ get_lambda_name(Prefix, Output) :-
 
 % TODO: is the --> syntax support needed?
 term_expansion((PredHeader :- PredBody), [(LambdaHeader :- LambdaBody), (PredHeader :- SubstPredBody)]) :-
-    compound(PredHeader),
-    PredHeader =.. [PredName | _],
+    (
+        compound(PredHeader) -> PredHeader =.. [PredName | _]
+        ; atom(PredHeader), PredHeader = PredName
+    ),
     get_lambda_name(PredName, LambdaName),
     subst_lambda(PredBody, SubstPredBody, LambdaName, LambdaLit),
     parse_lambda(LambdaLit, LitFree, LitArgs, LitBody),
